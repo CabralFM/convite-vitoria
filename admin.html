@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin – presenças 4 anos da Vitoria</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#eef6ff;--card:#fff;--ink:#14295a;--muted:#5b6f96;--line:#d9e6f5;--go:#1f9d57;--no:#d23d6d;--wait:#c98a10;--blue:#3d6fe0}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Nunito',system-ui,sans-serif;color:var(--ink);background:linear-gradient(180deg,#1d3f8f 0,#3b6fd0 180px,var(--bg) 180px)}
+  .wrap{max-width:640px;margin:0 auto;padding:18px 14px 60px}
+  h1{font-family:'Cinzel',serif;color:#fff;font-size:22px;margin:4px 0 2px;text-align:center}
+  .sub{color:#dbe8ff;text-align:center;font-size:13px;margin-bottom:16px}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .stat{background:var(--card);border-radius:16px;padding:12px 8px;text-align:center;box-shadow:0 6px 18px rgba(20,40,100,.12)}
+  .stat b{display:block;font-size:28px;line-height:1.1}
+  .stat span{font-size:12px;color:var(--muted);font-weight:700}
+  .stat.go b{color:var(--go)} .stat.no b{color:var(--no)} .stat.wait b{color:var(--wait)}
+  .people{margin-top:8px;background:var(--card);border-radius:16px;padding:10px 14px;display:flex;justify-content:space-around;font-weight:800;box-shadow:0 6px 18px rgba(20,40,100,.12)}
+  .people span{color:var(--muted);font-weight:700;font-size:13px}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .toolbar > *{flex:1 1 auto}
+  .card{background:var(--card);border-radius:18px;padding:16px;margin-top:14px;box-shadow:0 6px 18px rgba(20,40,100,.1)}
+  .card h2{font-size:16px;margin:0 0 4px}
+  .hint{color:var(--muted);font-size:13px;margin:0 0 10px}
+  textarea,input[type=text],input[type=password],select{width:100%;border:2px solid var(--line);border-radius:12px;padding:10px 12px;font:600 15px 'Nunito',sans-serif;color:var(--ink);background:#fff}
+  textarea{min-height:70px;resize:vertical}
+  .row{display:flex;gap:8px;margin-top:8px}
+  .row > *{flex:1}
+  button{border:0;border-radius:12px;padding:11px 14px;font:800 14px 'Nunito',sans-serif;cursor:pointer;background:var(--blue);color:#fff}
+  button.ghost{background:#eaf1fc;color:var(--blue)}
+  button.small{padding:6px 10px;font-size:12px;border-radius:10px}
+  a.linklike{color:var(--blue);font-weight:800;font-size:13px;text-decoration:none}
+  .msg{font-size:13px;font-weight:700;margin-top:8px;min-height:18px}
+  .msg.ok{color:var(--go)} .msg.err{color:var(--no)}
+  .tabs{display:flex;gap:6px;margin:16px 0 0;overflow-x:auto}
+  .tabs button{background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(20,40,100,.08);white-space:nowrap}
+  .tabs button.on{background:var(--ink);color:#fff}
+  .list{margin-top:10px}
+  .item{background:var(--card);border-radius:14px;padding:12px 14px;margin-bottom:8px;box-shadow:0 3px 10px rgba(20,40,100,.07);border-left:5px solid var(--wait)}
+  .item.vai{border-left-color:var(--go)} .item.nao{border-left-color:var(--no)}
+  .item .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .item .name{font-weight:800;font-size:16px}
+  .chip{font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;background:#fff4dc;color:var(--wait);white-space:nowrap}
+  .vai .chip{background:#e2f6ea;color:var(--go)} .nao .chip{background:#fde6ee;color:var(--no)}
+  .det{font-size:13.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+  .det b{color:var(--ink)}
+  .acts{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .edit{display:none;margin-top:8px}
+  .edit.show{display:block}
+  .empty{color:var(--muted);text-align:center;padding:18px;font-size:14px}
+  .banner{background:#fff4dc;color:#7a5300;border-radius:12px;padding:10px 12px;font-size:13.5px;font-weight:700;margin-top:12px;display:none}
+  .banner.show{display:block}
+  .newresp{border-left-color:var(--blue)}
+  .dlg{position:fixed;inset:0;background:rgba(10,20,50,.45);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+  .dlg.show{display:flex}
+  .dlg .box{background:#fff;border-radius:16px;padding:18px;max-width:360px;width:100%}
+  .dlg p{margin:0 0 14px;font-weight:700}
+  #gate{position:fixed;inset:0;background:linear-gradient(180deg,#1d3f8f,#3b6fd0);display:flex;align-items:center;justify-content:center;padding:20px;z-index:20}
+  #gate .box{background:#fff;border-radius:18px;padding:22px;max-width:340px;width:100%;text-align:center}
+  #gate h2{font-family:'Cinzel',serif;margin:0 0 6px}
+  #gate p{color:var(--muted);font-size:13px;margin:0 0 14px}
+  .hide{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- ============ porta de entrada (chave de admin) ============ -->
+<div id="gate">
+  <div class="box">
+    <h2>❄ Área privada</h2>
+    <p>Introduz a chave de administração para veres a lista de presenças da Vitoria.</p>
+    <input type="password" id="keyInput" placeholder="Chave de administração" autocomplete="off">
+    <div class="row"><button id="keyBtn">Entrar</button></div>
+    <div class="msg" id="gateMsg"></div>
+  </div>
+</div>
+
+<div class="wrap hide" id="app">
+  <h1>❄ Lista de presenças</h1>
+  <div class="sub">Aniversário da Vitoria – 4 anos · sábado, 19/12 · responder até 5/12</div>
+
+  <div class="stats">
+    <div class="stat go"><b id="sVai">0</b><span>Vão</span></div>
+    <div class="stat no"><b id="sNao">0</b><span>Não vão</span></div>
+    <div class="stat wait"><b id="sPend">0</b><span>Sem resposta</span></div>
+  </div>
+  <div class="people">
+    <div><b id="pA">0</b> <span>adultos</span></div>
+    <div><b id="pC">0</b> <span>crianças</span></div>
+    <div><b id="pT">0</b> <span>no total</span></div>
+  </div>
+
+  <div class="toolbar">
+    <button id="refresh" class="ghost">↻ Atualizar</button>
+    <button id="exportXlsx">⬇️ Descarregar Excel</button>
+    <button id="copyList" class="ghost">📋 Copiar resumo</button>
+  </div>
+  <div style="margin-top:8px;text-align:center">
+    <a class="linklike" id="sheetLink" target="_blank" rel="noopener" style="display:none">🔗 Abrir o Google Sheet (base de dados viva)</a>
+    <a class="linklike" id="logout" href="#" style="margin-left:10px">Sair</a>
+  </div>
+  <div class="banner" id="banner"></div>
+  <div class="msg" id="topMsg" style="text-align:center"></div>
+
+  <!-- respostas ainda não associadas -->
+  <div id="newBox" style="display:none">
+    <div class="card" style="border-left:5px solid var(--blue)">
+      <h2>🆕 Respostas novas para associar</h2>
+      <p class="hint">Chegaram respostas que ainda não foram ligadas a nenhum convidado da lista.</p>
+      <div id="newList"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>👪 Adicionar convidados</h2>
+    <p class="hint">Junta aqui quem convidaste, para saberes quem ainda não respondeu. Podes colar vários nomes, um por linha.</p>
+    <textarea id="newGuests" placeholder="Família Silva&#10;Tomás (turma da creche)&#10;Tia Ludimila"></textarea>
+    <div class="row"><button id="addGuests" class="ghost">+ Adicionar à lista</button></div>
+    <div class="msg" id="msg2"></div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button data-f="todos" class="on">Todos</button>
+    <button data-f="vai">✅ Vão</button>
+    <button data-f="nao">❌ Não vão</button>
+    <button data-f="pendente">⏳ Sem resposta</button>
+  </div>
+  <div class="list" id="list"><div class="empty" id="loading">A carregar…</div></div>
+</div>
+
+<div class="dlg" id="dlg"><div class="box"><p id="dlgTxt"></p><div class="row"><button class="ghost" id="dlgNo">Cancelar</button><button id="dlgYes" style="background:var(--no)">Apagar</button></div></div></div>
+
+<script src="config.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const CFG=window.CONFIG||{};
+const API_URL=CFG.API_URL||'';
+const KEY_STORE='rsvp_admin_key';
+const $=id=>document.getElementById(id);
+
+let KEY=null, convidados=[], respostas=[], respById={}, filter='todos';
+
+const norm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim();
+const splitNames=s=>String(s||'').split(/\s*,\s*/).map(x=>x.trim()).filter(Boolean);
+const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;};
+function fmtDate(iso){ if(!iso) return ''; const d=new Date(iso); if(isNaN(d.getTime())) return ''; const p=n=>String(n).padStart(2,'0'); return p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+d.getFullYear()+' '+p(d.getHours())+':'+p(d.getMinutes()); }
+function dateOf(g){ const r=g.resposta_id?respById[g.resposta_id]:null; return r?fmtDate(r.timestamp):''; }
+
+/* ---------- chamada ao backend ---------- */
+async function api(action, extra){
+  if(!API_URL || API_URL.indexOf('XXXX')>=0) throw new Error('config');
+  const body=Object.assign({action, key:KEY}, extra||{});
+  const res=await fetch(API_URL, {method:'POST', body:JSON.stringify(body)});
+  let data; try{ data=await res.json(); }catch(e){ throw new Error('resposta invalida'); }
+  if(data && data.error==='auth') throw new Error('auth');
+  if(!data || !data.ok) throw new Error((data&&data.error)||'erro');
+  return data;
+}
+
+/* ---------- porta de entrada ---------- */
+function openGate(prefillMsg){
+  $('gate').classList.remove('hide'); $('app').classList.add('hide');
+  if(prefillMsg){ $('gateMsg').className='msg err'; $('gateMsg').textContent=prefillMsg; }
+  $('keyInput').focus();
+}
+async function tryKey(k){
+  KEY=k;
+  const data=await api('list');
+  try{ localStorage.setItem(KEY_STORE,k); }catch(e){}
+  $('gate').classList.add('hide'); $('app').classList.remove('hide');
+  applyData(data);
+}
+$('keyBtn').onclick=async()=>{
+  const k=$('keyInput').value.trim();
+  if(!k){ $('gateMsg').className='msg err'; $('gateMsg').textContent='Escreve a chave.'; return; }
+  $('gateMsg').className='msg'; $('gateMsg').textContent='A verificar…';
+  try{ await tryKey(k); $('gateMsg').textContent=''; }
+  catch(e){
+    if(e.message==='config'){ $('gateMsg').className='msg err'; $('gateMsg').textContent='Falta configurar o API_URL no config.js.'; }
+    else if(e.message==='auth'){ $('gateMsg').className='msg err'; $('gateMsg').textContent='Chave errada. Tenta de novo.'; }
+    else{ $('gateMsg').className='msg err'; $('gateMsg').textContent='Não consegui ligar ('+e.message+').'; }
+  }
+};
+$('keyInput').addEventListener('keydown',e=>{ if(e.key==='Enter') $('keyBtn').click(); });
+$('logout').onclick=e=>{ e.preventDefault(); try{localStorage.removeItem(KEY_STORE);}catch(x){} KEY=null; location.reload(); };
+
+/* ---------- carregar / atualizar ---------- */
+function applyData(data){
+  respostas=Array.isArray(data.respostas)?data.respostas:[];
+  convidados=Array.isArray(data.convidados)?data.convidados:[];
+  respById={}; respostas.forEach(r=>{ respById[r.id]=r; });
+  convidados=convidados.map(g=>({
+    id:g.convidado_id,
+    nome:String(g.nome||'Sem nome'),
+    status:['vai','nao','pendente'].includes(g.status)?g.status:'pendente',
+    adultos:splitNames(g.adultos),
+    criancas:splitNames(g.criancas),
+    nota:String(g.nota||''),
+    resposta_id:g.resposta_id||''
+  }));
+  $('banner').classList.remove('show');
+  if(CFG.SHEET_URL && CFG.SHEET_URL.indexOf('XXXX')<0){ const a=$('sheetLink'); a.href=CFG.SHEET_URL; a.style.display='inline'; }
+  render();
+}
+async function refresh(silent){
+  if(!silent){ $('topMsg').className='msg'; $('topMsg').textContent='A atualizar…'; }
+  try{ const data=await api('list'); applyData(data); $('topMsg').textContent=''; }
+  catch(e){
+    if(e.message==='auth'){ openGate('A sessão expirou. Introduz a chave outra vez.'); return; }
+    $('banner').textContent='Não consegui atualizar ('+e.message+').'; $('banner').classList.add('show'); $('topMsg').textContent='';
+  }
+}
+$('refresh').onclick=()=>refresh(false);
+
+/* ---------- adicionar convidados ---------- */
+$('addGuests').onclick=async()=>{
+  const m=$('msg2'); m.className='msg';
+  const names=$('newGuests').value.split('\n').map(x=>x.trim()).filter(Boolean);
+  if(!names.length){ m.className='msg err'; m.textContent='Escreve pelo menos um nome.'; return; }
+  m.textContent='A guardar…';
+  try{ const r=await api('addGuests',{names}); $('newGuests').value=''; await refresh(true);
+    m.className='msg ok'; m.textContent=r.added?(r.added+' adicionado'+(r.added>1?'s':'')+' ✔'):'Esses nomes já estavam na lista.'; }
+  catch(e){ if(e.message==='auth'){openGate('A sessão expirou.');return;} m.className='msg err'; m.textContent='Não consegui guardar ('+e.message+').'; }
+};
+
+/* ---------- mudar estado / editar / apagar ---------- */
+async function setStatus(g,status){ try{ await api('updateGuest',{convidado_id:g.id,status}); await refresh(true); }catch(e){ if(e.message==='auth')openGate('A sessão expirou.'); } }
+async function saveGuest(g,fields){ try{ await api('updateGuest',Object.assign({convidado_id:g.id},fields)); await refresh(true); }catch(e){ if(e.message==='auth')openGate('A sessão expirou.'); } }
+
+let pendingDel=null;
+$('dlgNo').onclick=()=>{$('dlg').classList.remove('show');pendingDel=null;};
+$('dlgYes').onclick=async()=>{ $('dlg').classList.remove('show'); if(pendingDel){ try{await api('deleteGuest',{convidado_id:pendingDel});await refresh(true);}catch(e){ if(e.message==='auth')openGate('A sessão expirou.'); } pendingDel=null; } };
+
+/* ---------- respostas novas (não associadas) ---------- */
+function renderNew(){
+  const orphans=respostas.filter(r=>!String(r.convidado_id||'').trim());
+  const box=$('newBox'), list=$('newList'); list.textContent='';
+  if(!orphans.length){ box.style.display='none'; return; }
+  box.style.display='block';
+  orphans.forEach(r=>{
+    const it=el('div','item newresp');
+    it.appendChild(el('div','name', (r.status==='vai'?'✅ ':'❌ ')+(r.nome_contacto||'Sem nome')));
+    const det=el('div','det');
+    if(r.adultos) det.appendChild(el('div',null,'Adultos: '+r.adultos));
+    if(r.criancas) det.appendChild(el('div',null,'Crianças: '+r.criancas));
+    if(r.nota) det.appendChild(el('div',null,'Nota: '+r.nota));
+    det.appendChild(el('div',null,'Recebida: '+fmtDate(r.timestamp)));
+    it.appendChild(det);
+    const sel=el('select'); const o0=el('option',null,'➕ Novo convidado'); o0.value='__new'; sel.appendChild(o0);
+    [...convidados].sort((a,b)=>a.nome.localeCompare(b.nome)).forEach(g=>{const o=el('option',null,g.nome);o.value=g.id;sel.appendChild(o);});
+    const btn=el('button','small','Associar');
+    btn.onclick=async()=>{ try{ await api('linkResponse',{resposta_id:r.id,convidado_id:sel.value,nome:r.nome_contacto}); await refresh(true); }catch(e){ if(e.message==='auth')openGate('A sessão expirou.'); } };
+    const wrap=el('div','row'); wrap.append(sel,btn); it.appendChild(wrap);
+    list.appendChild(it);
+  });
+}
+
+/* ---------- lista principal ---------- */
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));filter=b.dataset.f;render();});
+
+function render(){
+  renderNew();
+  const vai=convidados.filter(g=>g.status==='vai');
+  $('sVai').textContent=vai.length; $('sNao').textContent=convidados.filter(g=>g.status==='nao').length; $('sPend').textContent=convidados.filter(g=>g.status==='pendente').length;
+  const A=vai.reduce((s,g)=>s+g.adultos.length,0),C=vai.reduce((s,g)=>s+g.criancas.length,0);
+  $('pA').textContent=A; $('pC').textContent=C; $('pT').textContent=A+C;
+  const list=$('list'); list.textContent='';
+  const order={vai:0,pendente:1,nao:2};
+  const items=convidados.filter(g=>filter==='todos'||g.status===filter).sort((a,b)=>(order[a.status]-order[b.status])||a.nome.localeCompare(b.nome));
+  if(!items.length){ list.appendChild(el('div','empty',convidados.length?'Ninguém nesta categoria.':'Ainda não há ninguém na lista. Adiciona os convidados ou espera as primeiras respostas.')); return; }
+  for(const g of items){
+    const it=el('div','item '+g.status);
+    const top=el('div','top'); top.appendChild(el('div','name',g.nome));
+    top.appendChild(el('span','chip',g.status==='vai'?'✅ Vai':g.status==='nao'?'❌ Não vai':'⏳ Sem resposta')); it.appendChild(top);
+    const det=el('div','det');
+    if(g.adultos.length){const d=el('div');d.appendChild(el('b',null,'Adultos ('+g.adultos.length+'): '));d.appendChild(document.createTextNode(g.adultos.join(', ')));det.appendChild(d);}
+    if(g.criancas.length){const d=el('div');d.appendChild(el('b',null,'Crianças ('+g.criancas.length+'): '));d.appendChild(document.createTextNode(g.criancas.join(', ')));det.appendChild(d);}
+    if(g.nota){const d=el('div');d.appendChild(el('b',null,'Nota: '));d.appendChild(document.createTextNode(g.nota));det.appendChild(d);}
+    const dt=dateOf(g); if(dt){const d=el('div');d.appendChild(el('b',null,'Respondeu: '));d.appendChild(document.createTextNode(dt));det.appendChild(d);}
+    if(det.childNodes.length) it.appendChild(det);
+    const acts=el('div','acts');
+    const bE=el('button','small ghost','✏️ Editar'); acts.appendChild(bE);
+    if(g.status!=='vai'){const b=el('button','small ghost','✅ Vai');b.onclick=()=>setStatus(g,'vai');acts.appendChild(b);}
+    if(g.status!=='nao'){const b=el('button','small ghost','❌ Não vai');b.onclick=()=>setStatus(g,'nao');acts.appendChild(b);}
+    if(g.status!=='pendente'){const b=el('button','small ghost','⏳ Sem resposta');b.onclick=()=>setStatus(g,'pendente');acts.appendChild(b);}
+    const bD=el('button','small ghost','🗑'); bD.onclick=()=>{pendingDel=g.id;$('dlgTxt').textContent='Apagar "'+g.nome+'" da lista?';$('dlg').classList.add('show');}; acts.appendChild(bD);
+    it.appendChild(acts);
+    const ed=el('div','edit');
+    const iN=el('input'); iN.type='text'; iN.value=g.nome; iN.placeholder='Nome';
+    const iA=el('input'); iA.type='text'; iA.value=g.adultos.join(', '); iA.placeholder='Adultos (separados por vírgula)'; iA.style.marginTop='6px';
+    const iC=el('input'); iC.type='text'; iC.value=g.criancas.join(', '); iC.placeholder='Crianças (separadas por vírgula)'; iC.style.marginTop='6px';
+    const iNota=el('input'); iNota.type='text'; iNota.value=g.nota; iNota.placeholder='Nota'; iNota.style.marginTop='6px';
+    const bS=el('button','small','Guardar'); bS.style.marginTop='8px';
+    bS.onclick=()=>saveGuest(g,{nome:iN.value.trim()||g.nome,adultos:splitNames(iA.value),criancas:splitNames(iC.value),nota:iNota.value.trim()});
+    ed.append(iN,iA,iC,iNota,bS); it.appendChild(ed);
+    bE.onclick=()=>ed.classList.toggle('show');
+    list.appendChild(it);
+  }
+}
+
+/* ---------- copiar resumo ---------- */
+$('copyList').onclick=async()=>{
+  const vai=convidados.filter(g=>g.status==='vai'),nao=convidados.filter(g=>g.status==='nao'),pen=convidados.filter(g=>g.status==='pendente');
+  const A=vai.reduce((s,g)=>s+g.adultos.length,0),C=vai.reduce((s,g)=>s+g.criancas.length,0);
+  let t='❄️ Aniversário da Vitoria – lista de presenças\n\n✅ VÃO ('+A+' adultos + '+C+' crianças = '+(A+C)+')\n';
+  vai.forEach(g=>{t+='• '+g.nome+': '+[...g.adultos,...g.criancas].join(', ')+'\n';});
+  t+='\n❌ NÃO VÃO ('+nao.length+')\n'; nao.forEach(g=>t+='• '+g.nome+'\n');
+  t+='\n⏳ SEM RESPOSTA ('+pen.length+')\n'; pen.forEach(g=>t+='• '+g.nome+'\n');
+  const m=$('topMsg');
+  try{ await navigator.clipboard.writeText(t); m.className='msg ok'; m.textContent='Resumo copiado — podes colá-lo no WhatsApp.'; }
+  catch(e){ m.className='msg err'; m.textContent='Não foi possível copiar neste dispositivo.'; }
+};
+
+/* ---------- exportar Excel (4 folhas) ---------- */
+$('exportXlsx').onclick=()=>{
+  if(typeof XLSX==='undefined'){ $('topMsg').className='msg err'; $('topMsg').textContent='Biblioteca de Excel ainda não carregou. Tenta outra vez.'; return; }
+  const vai=convidados.filter(g=>g.status==='vai'),nao=convidados.filter(g=>g.status==='nao'),pen=convidados.filter(g=>g.status==='pendente');
+  const A=vai.reduce((s,g)=>s+g.adultos.length,0),C=vai.reduce((s,g)=>s+g.criancas.length,0);
+
+  const resumo=[
+    {Indicador:'Vão (famílias/grupos)', Valor:vai.length},
+    {Indicador:'Não vão', Valor:nao.length},
+    {Indicador:'Sem resposta', Valor:pen.length},
+    {Indicador:'Total de adultos', Valor:A},
+    {Indicador:'Total de crianças', Valor:C},
+    {Indicador:'Total de pessoas que vão', Valor:A+C},
+    {Indicador:'Gerado em', Valor:fmtDate(new Date().toISOString())}
+  ];
+  const vaoRows=[];
+  vai.forEach(g=>{
+    const dt=dateOf(g);
+    g.adultos.forEach(n=>vaoRows.push({Nome:n, Tipo:'Adulto', 'Grupo/Família':g.nome, Nota:g.nota||'', 'Data da resposta':dt}));
+    g.criancas.forEach(n=>vaoRows.push({Nome:n, Tipo:'Criança', 'Grupo/Família':g.nome, Nota:g.nota||'', 'Data da resposta':dt}));
+    if(!g.adultos.length && !g.criancas.length) vaoRows.push({Nome:g.nome, Tipo:'(grupo)', 'Grupo/Família':g.nome, Nota:g.nota||'', 'Data da resposta':dt});
+  });
+  const naoRows=nao.map(g=>({Nome:g.nome, Mensagem:g.nota||'', Data:dateOf(g)}));
+  const pendRows=pen.map(g=>({Nome:g.nome}));
+
+  const wb=XLSX.utils.book_new();
+  const wsResumo=XLSX.utils.json_to_sheet(resumo); wsResumo['!cols']=[{wch:30},{wch:22}];
+  const wsVao=XLSX.utils.json_to_sheet(vaoRows.length?vaoRows:[{Nome:'',Tipo:'','Grupo/Família':'',Nota:'','Data da resposta':''}]); wsVao['!cols']=[{wch:26},{wch:10},{wch:26},{wch:30},{wch:18}];
+  const wsNao=XLSX.utils.json_to_sheet(naoRows.length?naoRows:[{Nome:'',Mensagem:'',Data:''}]); wsNao['!cols']=[{wch:26},{wch:36},{wch:18}];
+  const wsPen=XLSX.utils.json_to_sheet(pendRows.length?pendRows:[{Nome:''}]); wsPen['!cols']=[{wch:30}];
+  XLSX.utils.book_append_sheet(wb,wsResumo,'Resumo');
+  XLSX.utils.book_append_sheet(wb,wsVao,'Vão');
+  XLSX.utils.book_append_sheet(wb,wsNao,'Não vão');
+  XLSX.utils.book_append_sheet(wb,wsPen,'Sem resposta');
+  XLSX.writeFile(wb,'Presencas_Vitoria_4anos.xlsx');
+};
+
+/* ---------- arranque ---------- */
+(function(){
+  if(!API_URL || API_URL.indexOf('XXXX')>=0){ openGate('Falta configurar o API_URL no config.js antes de usar o admin.'); return; }
+  let saved=null; try{ saved=localStorage.getItem(KEY_STORE); }catch(e){}
+  if(saved){ tryKey(saved).catch(e=>{ if(e.message==='auth') openGate('Introduz a chave de administração.'); else openGate('Não consegui ligar ('+e.message+'). Verifica a chave.'); }); }
+  else openGate();
+})();
+</script>
+</body>
+</html>
